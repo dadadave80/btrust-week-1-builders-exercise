@@ -192,9 +192,8 @@ pub fn extract_tx_version(raw_tx_hex: &str) -> Result<u32, String> {
     if raw_tx_hex.len() < 8 {
         return Err("Transaction data too short".to_string());
     }
-    let version_hex = &raw_tx_hex[..2];
-    let version = version_hex
-        .parse::<u32>()
-        .map_err(|_| "Hex decode error".to_string())?;
-    Ok(version)
+    let version_hex = &raw_tx_hex[..8];
+    let version =
+        u32::from_str_radix(version_hex, 16).map_err(|_| "Hex decode error".to_string())?;
+    Ok(version.swap_bytes())
 }
